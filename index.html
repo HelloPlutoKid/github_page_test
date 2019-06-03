@@ -1,12 +1,125 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css">
+  <!-- <link rel="stylesheet" href="/WEB-INF/styles/index.css"> -->
+
+  <script src="https://code.getmdl.io/1.2.1/material.min.js"></script>
+  <script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
+
+  <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script> -->
+  <script type="text/javascript" src="script/gmxwebpush/zepto.js"></script>
+  <!-- webkit에서 사용 가능 -->
+  <script type="text/javascript" src="script/gmxwebpush/gmxPush.js"></script>
+
+  <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+  <!-- Material Design icon font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <style>
+    #view-source {
+      position: fixed;
+      display: block;
+      right: 0;
+      bottom: 0;
+      margin-right: 40px;
+      margin-bottom: 40px;
+      z-index: 900;
+    }
+
+    button {
+      font-weight: bold !important;
+    }
+  </style>
+
 </head>
+
 <body>
-    <h1>첫 깃허브페이지입니다</h1>
+  <div>
+    <button class="mdl-button mdl-js-button mdl-button--raised subscriptionConfirm">
+      구독 확인
+    </button>
+    <button class="mdl-button mdl-js-button mdl-button--raised subscriptionCancel">
+      구독 취소
+    </button>
+  </div>
+  <div>
+    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="mancity">
+      <input type="checkbox" id="mancity" class="mdl-checkbox__input footballTeam">
+      <span class="mdl-checkbox__label">맨시티</span>
+    </label>
+    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="liverpool">
+      <input type="checkbox" id="liverpool" class="mdl-checkbox__input footballTeam">
+      <span class="mdl-checkbox__label">리버풀</span>
+    </label>
+    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="totham">
+      <input type="checkbox" id="totham" class="mdl-checkbox__input footballTeam">
+      <span class="mdl-checkbox__label">토트넘</span>
+    </label>
+    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="chelsea">
+      <input type="checkbox" id="chelsea" class="mdl-checkbox__input footballTeam">
+      <span class="mdl-checkbox__label">첼시</span>
+    </label>
+    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="aresnal">
+      <input type="checkbox" id="aresnal" class="mdl-checkbox__input footballTeam">
+      <span class="mdl-checkbox__label">아스날</span>
+    </label>
+    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="manu">
+      <input type="checkbox" id="manu" class="mdl-checkbox__input footballTeam">
+      <span class="mdl-checkbox__label">맨유</span>
+    </label>
+  </div>
+  <button class="mdl-button mdl-js-button mdl-button--raised subscriptionMenu">
+    구독 메뉴
+  </button>
+  <script>
+    $(".subscriptionConfirm").click(function () {
+      push.pushStart(true);
+      document.getElementsByClassName('subscriptionConfirm')[0].disabled = true;
+      document.getElementsByClassName('subscriptionCancel')[0].disabled = false;
+      document.getElementsByClassName('subscriptionConfirm')[0].textContent = "구독중";
+    });
+
+    $(".subscriptionCancel").click(function () {
+      push.pushStart(false);
+      document.getElementsByClassName('subscriptionConfirm')[0].disabled = false;
+      document.getElementsByClassName('subscriptionConfirm')[0].textContent = "구독하기";
+
+      document.getElementsByClassName('subscriptionCancel')[0].disabled = true;
+    });
+
+    $(document).ready(function () {
+      push.checkSubscription(document.getElementsByClassName('subscriptionConfirm')[0], document.getElementsByClassName('subscriptionCancel')[0]);
+      push.checkSubscription(document.getElementsByClassName('subscriptionConfirm')[0], document.getElementsByClassName('subscriptionCancel')[0]);
+
+    });
+
+    document.getElementsByClassName('subscriptionMenu')[0].addEventListener("click", function (e) {
+      let teams = document.getElementsByClassName("footballTeam");
+      let teamObj = {};
+      for (const team of teams) {
+        teamObj[team.getAttribute('id')] = team.checked ? 'Y' : 'N';
+      }
+      console.log(teamObj);
+      $.ajax({
+        url: "https://10.1.73.154:8443/LabServer/set/notiMenu",
+        dataType: "json",
+        type: 'post',
+        data: teamObj,
+        success: function (result) {
+          console.log(result);
+        }
+      });
+
+    });
+  </script>
 </body>
+
 </html>
